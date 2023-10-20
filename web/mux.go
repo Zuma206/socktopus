@@ -2,7 +2,9 @@ package web
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 type ServeMux struct {
@@ -26,4 +28,15 @@ func (m *ServeMux) Route(pattern string, handler Handler) {
 		writer.SendError(500, "Internal server error")
 		fmt.Println("Route error:", err)
 	})
+}
+
+func (m *ServeMux) Listen() {
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8080"
+	}
+	err := http.ListenAndServe(":"+PORT, m)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

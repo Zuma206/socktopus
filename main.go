@@ -1,5 +1,20 @@
 package main
 
-func main() {
+import (
+	"github.com/joho/godotenv"
+	"github.com/zuma206/socktopus/web"
+)
 
+func init() {
+	godotenv.Load(".env")
+}
+
+func main() {
+	router := web.New()
+
+	router.Route("/", func(w web.ResponseWriter, r web.Request) error {
+		return w.SendString(200, "Hello, World!")
+	})
+
+	router.Listen()
 }
