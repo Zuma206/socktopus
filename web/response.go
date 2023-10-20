@@ -24,6 +24,10 @@ func (w *ResponseWriter) Send(statusCode int, body []byte) error {
 	return err
 }
 
+func (w *ResponseWriter) SendString(statusCode int, body string) error {
+	return w.Send(statusCode, []byte(body))
+}
+
 func (w *ResponseWriter) SendJson(statusCode int, data any) error {
 	body, err := json.Marshal(data)
 	if err != nil {
