@@ -1,0 +1,29 @@
+package web
+
+import (
+	"fmt"
+	"net/http"
+)
+
+type ServeMux struct {
+	http.ServeMux
+}
+
+func New() *ServeMux {
+	return &ServeMux{*http.NewServeMux()}
+}
+
+type Request *http.Request
+type Handler func(ResponseWriter, Request) error
+
+func (m *ServeMux) Route(pattern string, handler Handler) {
+	m.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		writer := ResponseWriter{w}
+		err := handler(writer, r)
+		if err == nil {
+			return
+		}
+		writer.SendError(500, "Internal server error")
+		fmt.Println("Route error:", err)
+	})
+}
