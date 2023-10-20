@@ -1,10 +1,16 @@
 package controllers
 
 import (
+	"github.com/gorilla/websocket"
 	"github.com/zuma206/socktopus/models"
 	"github.com/zuma206/socktopus/utils"
 	"github.com/zuma206/socktopus/web"
 )
+
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
 
 func HandleRecieve(w web.ResponseWriter, r web.Request) error {
 	query := r.URL.Query()
@@ -28,8 +34,11 @@ func HandleRecieve(w web.ResponseWriter, r web.Request) error {
 		return w.SendError(401, "Invalid signature")
 	}
 
-	return w.SendJson(200, web.H{
-		"secretName":   connection.SecretName,
-		"connectionId": connection.ConnectionId,
-	})
+	conn, err := upgrader.Upgrade(w.ResponseWriter, r, nil)
+	if err = conn.WriteMessage(websocket.TextMessage, []byte("Hello, World!")); err != nil {
+		return err
+	}
+	conn.Close()
+
+	return nil
 }
