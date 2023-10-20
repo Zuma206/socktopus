@@ -11,7 +11,7 @@ func Run() {
 		return
 	}
 
-	token, err := GenerateToken(os.Args[0], os.Args[1], os.Args[2])
+	token, err := GenerateToken(os.Args[1], os.Args[2], os.Args[3])
 	if err != nil {
 		log.Fatal(err)
 	}

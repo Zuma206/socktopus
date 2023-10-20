@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/zuma206/socktopus/cli"
+	"github.com/zuma206/socktopus/controllers"
 	"github.com/zuma206/socktopus/web"
 )
 
@@ -17,6 +18,8 @@ func main() {
 	router.Route("/", func(w web.ResponseWriter, r web.Request) error {
 		return w.SendString(200, "Hello, World!")
 	})
+
+	router.Route("/recieve", controllers.HandleRecieve)
 
 	router.Listen()
 }
