@@ -4,8 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+      rel="stylesheet"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"
+      defer
+    ></script>
   </head>
   <body>
-    <h1>Socktopus</h1>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="javascript:void(0)">
+          <img
+            src="https://raw.githubusercontent.com/Zuma206/socktopus/main/logo.png"
+            class="me-2"
+            height="40"
+            alt="MDB Logo"
+            loading="lazy"
+          />
+          <small>Socktopus Dashboard</small>
+        </a>
+      </div>
+    </nav>
+
+    <div
+      class="container"
+      style="
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      "
+    >
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Services</h5>
+          <ul style="margin: 0">
+            {{ range .Services }}
+            <li>{{ . }}</li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Connections</h5>
+          <p class="card-text">
+            There are currently {{ .Count }} connected client(s)
+          </p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

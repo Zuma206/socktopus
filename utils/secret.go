@@ -15,3 +15,15 @@ func GetSecret(name string) (string, error) {
 	}
 	return secret, nil
 }
+
+func GetSecretNames() []string {
+	services := make([]string, 0)
+	for _, env := range os.Environ() {
+		parts := strings.SplitN(env, "=", 2)
+		if strings.HasSuffix(parts[0], SUFFIX) {
+			name := strings.SplitN(parts[0], SUFFIX, 2)
+			services = append(services, strings.ToLower(name[0]))
+		}
+	}
+	return services
+}
