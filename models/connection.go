@@ -10,14 +10,20 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gorilla/websocket"
 	"github.com/zuma206/socktopus/cli"
 )
+
+const CLOSE = "CLOSE"
+const PING = "PING"
+const PONG = "PONG"
 
 type Connection struct {
 	ConnectionId string
 	SecretName   string
 	Timestamp    int
 	Signature    []byte
+	Socket       *websocket.Conn
 }
 
 func NewConnection(token string) (*Connection, error) {
@@ -56,6 +62,7 @@ func NewConnection(token string) (*Connection, error) {
 		SecretName:   string(secretName),
 		Timestamp:    timestampInt,
 		Signature:    signature,
+		Socket:       nil,
 	}, nil
 }
 
@@ -75,4 +82,28 @@ func (c *Connection) IsSigned(secret string) bool {
 		return false
 	}
 	return hmac.Equal(c.Signature, verification.Sum(nil))
+}
+
+func (c *Connection) Key() string {
+	return c.SecretName + ";;" + c.ConnectionId
+}
+
+func (c *Connection) Close() {
+	if c.Socket != nil {
+		c.Send([]byte(CLOSE))
+		c.Socket.Close()
+	}
+}
+
+const READ_DEADLINE = time.Duration(10 * time.Second)
+
+func (c *Connection) ApplyDeadline() error {
+	return c.Socket.SetReadDeadline(time.Now().Add(READ_DEADLINE))
+}
+
+func (c *Connection) Send(message []byte) error {
+	if err := c.Socket.WriteMessage(websocket.TextMessage, message); err != nil {
+		return err
+	}
+	return nil
 }

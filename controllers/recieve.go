@@ -34,11 +34,30 @@ func HandleRecieve(w web.ResponseWriter, r web.Request) error {
 		return w.SendError(401, "Invalid signature")
 	}
 
-	conn, err := upgrader.Upgrade(w.ResponseWriter, r, nil)
-	if err = conn.WriteMessage(websocket.TextMessage, []byte("Hello, World!")); err != nil {
+	connection.Socket, err = upgrader.Upgrade(w.ResponseWriter, r, nil)
+	if err != nil {
 		return err
 	}
-	conn.Close()
+
+	models.DefaultSocketManager.Join(connection)
+	defer models.DefaultSocketManager.Leave(connection.Key())
+
+	err = connection.ApplyDeadline()
+	if err != nil {
+		return err
+	}
+
+	for {
+		messageType, message, err := connection.Socket.ReadMessage()
+		msg := string(message)
+		if err != nil || messageType != websocket.TextMessage || msg == models.CLOSE {
+			models.DefaultSocketManager.Leave(connection.Key())
+			break
+		} else if msg == models.PING {
+			connection.ApplyDeadline()
+			connection.Send([]byte(models.PONG))
+		}
+	}
 
 	return nil
 }
