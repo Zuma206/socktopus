@@ -1,5 +1,7 @@
 package models
 
+import "errors"
+
 var DefaultSocketManager = NewSocketManager()
 
 type SocketManager struct {
@@ -54,4 +56,12 @@ func (sm *SocketManager) Leave(key string) {
 
 func (sm *SocketManager) Count() int {
 	return len(sm.connections)
+}
+
+func (sm *SocketManager) Send(key string, message string) error {
+	connection, ok := sm.connections[key]
+	if !ok {
+		return errors.New("Client not connected")
+	}
+	return connection.Send([]byte("DATA:" + message))
 }

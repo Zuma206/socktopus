@@ -84,8 +84,12 @@ func (c *Connection) IsSigned(secret string) bool {
 	return hmac.Equal(c.Signature, verification.Sum(nil))
 }
 
+func ConnectionKey(secretName string, connectionId string) string {
+	return secretName + ";;" + connectionId
+}
+
 func (c *Connection) Key() string {
-	return c.SecretName + ";;" + c.ConnectionId
+	return ConnectionKey(c.SecretName, c.ConnectionId)
 }
 
 func (c *Connection) Close() {
