@@ -65,3 +65,11 @@ func (sm *SocketManager) Send(key string, message string) error {
 	}
 	return connection.Send([]byte("DATA:" + message))
 }
+
+func (sm *SocketManager) Get(key string) (*Connection, error) {
+	connection, ok := sm.connections[key]
+	if !ok {
+		return nil, errors.New("Connection doesn't exist")
+	}
+	return connection, nil
+}

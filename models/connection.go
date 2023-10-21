@@ -66,7 +66,7 @@ func NewConnection(token string) (*Connection, error) {
 	}, nil
 }
 
-const TOKEN_LIFESPAN = 10_000
+const TOKEN_LIFESPAN = 60_000
 
 func (c *Connection) IsExpired() bool {
 	if time.Now().UnixMilli()-int64(c.Timestamp) > TOKEN_LIFESPAN {

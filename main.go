@@ -26,6 +26,7 @@ func main() {
 
 	router.Route("/recieve", controllers.HandleRecieve)
 	router.Route("/send", controllers.HandleSend)
+	router.Route("/kick", controllers.HandleKick)
 
 	router.Listen()
 }

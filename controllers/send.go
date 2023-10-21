@@ -13,7 +13,7 @@ type Message struct {
 	Content   string `json:"content"`
 }
 
-type Request struct {
+type SendRequest struct {
 	SecretName string    `json:"secretName"`
 	Secret     string    `json:"secret"`
 	Messages   []Message `json:"messages"`
@@ -25,8 +25,8 @@ type Response struct {
 }
 
 func HandleSend(w web.ResponseWriter, r web.Request) error {
-	request := new(Request)
 	decoder := json.NewDecoder(r.Body)
+	request := new(SendRequest)
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(request); err != nil {
 		return w.SendError(400, "Malformed request")
