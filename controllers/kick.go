@@ -40,7 +40,7 @@ func HandleKick(w web.ResponseWriter, r web.Request) error {
 		if err != nil {
 			continue
 		}
-		expiresAt := int64(connection.Timestamp + models.TOKEN_LIFESPAN)
+		expiresAt := int64(connection.Timestamp + utils.TOKEN_LIFESPAN)
 		diff := (expiresAt - time.Now().UnixMilli()) * int64(time.Millisecond)
 
 		wg.Add(1)

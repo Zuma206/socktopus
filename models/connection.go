@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/zuma206/socktopus/cli"
+	"github.com/zuma206/socktopus/utils"
 )
 
 const CLOSE = "CLOSE"
@@ -66,10 +67,8 @@ func NewConnection(token string) (*Connection, error) {
 	}, nil
 }
 
-const TOKEN_LIFESPAN = 60_000
-
 func (c *Connection) IsExpired() bool {
-	if time.Now().UnixMilli()-int64(c.Timestamp) > TOKEN_LIFESPAN {
+	if time.Now().UnixMilli()-int64(c.Timestamp) > utils.TOKEN_LIFESPAN {
 		return true
 	}
 	return false
@@ -99,10 +98,8 @@ func (c *Connection) Close() {
 	}
 }
 
-const READ_DEADLINE = time.Duration(10 * time.Second)
-
 func (c *Connection) ApplyDeadline() error {
-	return c.Socket.SetReadDeadline(time.Now().Add(READ_DEADLINE))
+	return c.Socket.SetReadDeadline(time.Now().Add(utils.READ_DEADLINE))
 }
 
 func (c *Connection) Send(message []byte) error {
