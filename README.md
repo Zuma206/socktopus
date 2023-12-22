@@ -4,11 +4,7 @@
 
 ## Mission Statement
 
-A simple websocket microservice made to be paired with serverless typescript/javascript applications. It supports multiple secrets, allowing one instance to be used in multiple applications. It's written in Go to make the best possible use of the resources you give it.
-
-## SDK
-
-Although the microservice itself is written in Go, it's made to be interacted with using TS/JS, so you can find the npm SDK [here](https://github.com/zuma206/socktopus-sdk).
+A simple websocket microservice made to be paired with serverless applications. It supports multiple secrets, allowing one instance to be used in multiple applications. It's written in Go to make the best possible use of the resources you give it.
 
 ## Authenticating
 
