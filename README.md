@@ -12,7 +12,7 @@ To authenticate as a server, it's very simple. First, add an environment variabl
 
 To authenticate as a client, things are less simple. You'll need to contact the application's server, and recieve a token. The token will look like this:
 
-`hex(timestampNow) + 'h' + hex(appName) + 'h' + hex(connectionId) + 'h' + hex(sign(timestamp+connectionId, secret))`
+`hex(timestampNow) + 'h' + hex(appName) + 'h' + hex(connectionId) + 'h' + hex(sha256Sign(timestamp+connectionId, secret))`
 
 To easily generate this token, use the SDK. If your app isn't written in TS/JS, use a trusted crypto library instead.
 
