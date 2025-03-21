@@ -35,6 +35,7 @@ func (m *ServeMux) Listen() {
 	if PORT == "" {
 		PORT = "8080"
 	}
+	log.Println("Starting at http://localhost:" + PORT)
 	err := http.ListenAndServe(":"+PORT, m)
 	if err != nil {
 		log.Fatal(err)
