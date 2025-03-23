@@ -20,6 +20,7 @@ type Handler func(ResponseWriter, Request) error
 
 func (m *ServeMux) Route(pattern string, handler Handler) {
 	m.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[%s] %s", r.Method, r.URL.Path)
 		writer := ResponseWriter{w}
 		err := handler(writer, r)
 		if err == nil {
