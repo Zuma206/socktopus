@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
@@ -57,6 +58,9 @@ func HandleRecieve(w web.ResponseWriter, r web.Request) error {
 		messageType, message, err := connection.Socket.ReadMessage()
 		msg := string(message)
 		if err != nil || messageType != websocket.TextMessage || msg == models.CLOSE {
+			if err != nil {
+				log.Printf("[TIMEOUT] %s", connection.Key())
+			}
 			models.DefaultSocketManager.Leave(connection.Key())
 			break
 		} else if msg == models.PING {
