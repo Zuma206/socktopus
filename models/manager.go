@@ -3,12 +3,14 @@ package models
 import (
 	"errors"
 	"log"
+	"sync"
 )
 
 var DefaultSocketManager = &SocketManager{}
 
 type SocketManager struct {
 	connections map[string]*Connection
+	lock        sync.RWMutex
 }
 
 func (sm *SocketManager) join(connection *Connection) {
@@ -29,18 +31,26 @@ func (sm *SocketManager) leave(key string) {
 }
 
 func (sm *SocketManager) Join(connection *Connection) {
+	sm.lock.Lock()
+	defer sm.lock.Unlock()
 	sm.join(connection)
 }
 
 func (sm *SocketManager) Leave(key string) {
+	sm.lock.Lock()
+	defer sm.lock.Unlock()
 	sm.leave(key)
 }
 
 func (sm *SocketManager) Count() int {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
 	return len(sm.connections)
 }
 
 func (sm *SocketManager) Send(key string, message string) error {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
 	connection, ok := sm.connections[key]
 	if !ok {
 		return errors.New("Client not connected")
@@ -49,6 +59,8 @@ func (sm *SocketManager) Send(key string, message string) error {
 }
 
 func (sm *SocketManager) Get(key string) (*Connection, error) {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
 	connection, ok := sm.connections[key]
 	if !ok {
 		return nil, errors.New("Connection doesn't exist")
