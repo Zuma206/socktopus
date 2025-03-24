@@ -26,7 +26,7 @@ func (m *ServeMux) Route(pattern string, handler Handler) {
 		if err == nil {
 			return
 		}
-		writer.SendError(500, "Internal server error")
+		writer.SendError(err, 500, "Internal server error")
 		fmt.Println("Route error:", err)
 	})
 }
