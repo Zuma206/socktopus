@@ -5,33 +5,10 @@ import (
 	"log"
 )
 
-var DefaultSocketManager = NewSocketManager()
+var DefaultSocketManager = &SocketManager{}
 
 type SocketManager struct {
 	connections map[string]*Connection
-	joining     chan *Connection
-	leaving     chan string
-}
-
-func NewSocketManager() *SocketManager {
-	sm := &SocketManager{
-		connections: make(map[string]*Connection),
-		joining:     make(chan *Connection),
-		leaving:     make(chan string),
-	}
-
-	go func() {
-		for {
-			select {
-			case connection := <-sm.joining:
-				sm.join(connection)
-			case key := <-sm.leaving:
-				sm.leave(key)
-			}
-		}
-	}()
-
-	return sm
 }
 
 func (sm *SocketManager) join(connection *Connection) {
@@ -52,11 +29,11 @@ func (sm *SocketManager) leave(key string) {
 }
 
 func (sm *SocketManager) Join(connection *Connection) {
-	sm.joining <- connection
+	sm.join(connection)
 }
 
 func (sm *SocketManager) Leave(key string) {
-	sm.leaving <- key
+	sm.leave(key)
 }
 
 func (sm *SocketManager) Count() int {
