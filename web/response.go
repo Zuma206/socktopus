@@ -2,6 +2,7 @@ package web
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -41,7 +42,8 @@ func (w *ResponseWriter) SendJson(statusCode int, data any) error {
 
 type H map[string]interface{}
 
-func (w *ResponseWriter) SendError(statusCode int, errorMessage string) error {
+func (w *ResponseWriter) SendError(err error, statusCode int, errorMessage string) error {
+	log.Println("[ERROR]", err)
 	return w.SendJson(statusCode, H{
 		"code":    statusCode,
 		"message": errorMessage,

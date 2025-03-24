@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"log"
+)
 
 var DefaultSocketManager = NewSocketManager()
 
@@ -35,6 +38,7 @@ func (sm *SocketManager) join(connection *Connection) {
 	key := connection.Key()
 	sm.leave(key)
 	sm.connections[key] = connection
+	log.Printf("[JOINED] %s", key)
 }
 
 func (sm *SocketManager) leave(key string) {
@@ -44,6 +48,7 @@ func (sm *SocketManager) leave(key string) {
 	}
 	connection.Close()
 	delete(sm.connections, key)
+	log.Printf("[LEFT] %s", key)
 }
 
 func (sm *SocketManager) Join(connection *Connection) {

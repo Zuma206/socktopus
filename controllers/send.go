@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/zuma206/socktopus/models"
 	"github.com/zuma206/socktopus/utils"
@@ -29,15 +30,15 @@ func HandleSend(w web.ResponseWriter, r web.Request) error {
 	request := new(SendRequest)
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(request); err != nil {
-		return w.SendError(400, "Malformed request")
+		return w.SendError(err, 400, "Malformed request")
 	}
 
 	secret, err := utils.GetSecret(request.SecretName)
 	if err != nil {
-		return w.SendError(404, "Secret not found")
+		return w.SendError(err, 404, "Secret not found")
 	}
 	if secret != request.Secret {
-		return w.SendError(401, "Invalid secret")
+		return w.SendError(errors.New("invalid secret"), 401, "Invalid secret")
 	}
 
 	response := Response{

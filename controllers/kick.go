@@ -21,16 +21,16 @@ func HandleKick(w web.ResponseWriter, r web.Request) error {
 	request := new(KickRequest)
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(request); err != nil {
-		return w.SendError(400, "Malformed request")
+		return w.SendError(err, 400, "Malformed request")
 	}
 
 	secret, err := utils.GetSecret(request.SecretName)
 	if err != nil {
-		return w.SendError(404, "Secret not found")
+		return w.SendError(err, 404, "Secret not found")
 	}
 
 	if secret != request.Secret {
-		return w.SendError(401, "Invalid secret")
+		return w.SendError(err, 401, "Invalid secret")
 	}
 
 	wg := new(sync.WaitGroup)
