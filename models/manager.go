@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-var DefaultSocketManager = &SocketManager{}
+var DefaultSocketManager = &SocketManager{connections: make(map[string]*Connection)}
 
 type SocketManager struct {
 	connections map[string]*Connection
